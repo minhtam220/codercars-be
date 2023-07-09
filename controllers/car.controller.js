@@ -30,6 +30,7 @@ carController.createCar = async (req, res, next) => {
   }
 };
 
+/*
 carController.getCars = async (req, res, next) => {
   //validate input
   const allowedFilter = [
@@ -68,6 +69,56 @@ carController.getCars = async (req, res, next) => {
         filter[condition] = filterQuery[condition];
       });
     }
+
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 50;
+
+    // Calculate the number of documents to skip based on the page and limit
+    const skipCount = (page - 1) * limit;
+
+    //mongoose query
+    const totalCount = await Car.find(filter).countDocuments();
+    const totalPages = Math.ceil(totalCount / limit);
+    const listOfFound = await Car.find(filter).skip(skipCount).limit(limit);
+
+    sendResponse(
+      res,
+      200,
+      true,
+      { data: listOfFound, total: totalPages },
+      null,
+      "Found list of cars success"
+    );
+  } catch (err) {
+    next(err);
+  }
+};
+*/
+
+carController.getCars = async (req, res, next) => {
+  //validate input
+  const allowedFilter = ["search", "isDeleted", "page", "limit"];
+
+  try {
+    let { page, limit, search, ...filterQuery } = req.query;
+
+    // Search query
+    const filter = {
+      $or: [
+        { make: { $regex: search, $options: "i" } },
+        { model: { $regex: search, $options: "i" } },
+      ],
+      isDeleted: false,
+    };
+
+    /*
+    //proceed the filter input
+    if (filterKeys.length) {
+      filterKeys.forEach((condition) => {
+        filter[condition] = filterQuery[condition];
+      });
+    }
+    */
 
     page = parseInt(page) || 1;
     limit = parseInt(limit) || 50;
