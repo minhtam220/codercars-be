@@ -116,7 +116,7 @@ carController.getCars = async (req, res, next) => {
     }
 
     page = parseInt(page) || 1;
-    limit = parseInt(limit) || 5;
+    limit = parseInt(limit) || 10;
 
     // Calculate the number of documents to skip based on the page and limit
     const skipCount = (page - 1) * limit;
