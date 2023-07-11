@@ -100,40 +100,23 @@ carController.getCars = async (req, res, next) => {
   const allowedFilter = ["search", "isDeleted", "page", "limit"];
 
   try {
+    let filter = {};
     let { page, limit, search, ...filterQuery } = req.query;
 
-    search = toString(search) || "";
+    if (typeof search === "string") {
+      const searchRegex = new RegExp(search, "i"); // Create a case-insensitive regex pattern
 
-    // Search query
-    /*
-    const filter = {
-      $or: [
-        { make: { $regex: search, $options: "i" } },
-        { model: { $regex: search, $options: "i" } },
-      ],
-      isDeleted: false,
-    };
-    */
-
-    // Search query
-    const filter = {
-      $or: [
-        { isDeleted: false, make: { $regex: search, $options: "i" } },
-        { isDeleted: false, model: { $regex: search, $options: "i" } },
-      ],
-    };
-
-    /*
-    //proceed the filter input
-    if (filterKeys.length) {
-      filterKeys.forEach((condition) => {
-        filter[condition] = filterQuery[condition];
-      });
+      // Search query
+      filter = {
+        $or: [
+          { isDeleted: false, make: { $regex: searchRegex } },
+          { isDeleted: false, model: { $regex: searchRegex } },
+        ],
+      };
     }
-    */
 
     page = parseInt(page) || 1;
-    limit = parseInt(limit) || 50;
+    limit = parseInt(limit) || 5;
 
     // Calculate the number of documents to skip based on the page and limit
     const skipCount = (page - 1) * limit;

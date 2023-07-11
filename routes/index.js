@@ -5,6 +5,6 @@ const router = express.Router();
 
 // CAR
 const carAPI = require("./car.api.js");
-router.use("/car", carAPI);
+router.use("/cars", carAPI);
 
 module.exports = router;
