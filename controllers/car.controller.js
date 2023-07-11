@@ -105,12 +105,22 @@ carController.getCars = async (req, res, next) => {
     search = toString(search) || "";
 
     // Search query
+    /*
     const filter = {
       $or: [
         { make: { $regex: search, $options: "i" } },
         { model: { $regex: search, $options: "i" } },
       ],
       isDeleted: false,
+    };
+    */
+
+    // Search query
+    const filter = {
+      $or: [
+        { isDeleted: false, make: { $regex: search, $options: "i" } },
+        { isDeleted: false, model: { $regex: search, $options: "i" } },
+      ],
     };
 
     /*
