@@ -18,9 +18,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to MONGODB
-mongoose.connect(process.env.MONGODB_URI, () => {
-  console.log("Connected to Database!");
-});
+mongoose
+  .connect(process.env.MONGODB_URI, () => {
+    console.log("Connected to Database!");
+  })
+  .catch((error) => {
+    console.error("Failed to connect to MongoDB:", error);
+  });
 
 app.use("/", indexRouter);
 

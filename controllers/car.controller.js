@@ -102,6 +102,8 @@ carController.getCars = async (req, res, next) => {
   try {
     let { page, limit, search, ...filterQuery } = req.query;
 
+    search = toString(search) || "";
+
     // Search query
     const filter = {
       $or: [
